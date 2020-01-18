@@ -1,0 +1,33 @@
+package graphics_2d;
+
+import java.awt.BasicStroke;
+import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+public class LISTENER implements ActionListener,MouseListener{
+	String order;
+	Graphics2D g2d;
+	int x1,x2,y1,y2;
+	public void actionPerformed(ActionEvent e){
+		order = e.getActionCommand();
+		if(order.equals("Line")){
+			//new BasicStroke(float width,int cap端点样,int join连接方式)
+			g2d.setStroke(new BasicStroke((float) 4.2,BasicStroke.CAP_ROUND,BasicStroke.JOIN_MITER));
+		}
+	}
+	public void mouseClicked(MouseEvent e){}
+    public void mousePressed(MouseEvent e){
+    	x1 = e.getX();	y1 = e.getY();
+    }
+    public void mouseReleased(MouseEvent e){
+    	x2 = e.getX();	y2 = e.getY();
+    	if(order.equals("Line")){
+    		g2d.drawLine(x1, y1, x2, y2);
+    	}
+    }
+    public void mouseEntered(MouseEvent e){}
+    public void mouseExited(MouseEvent e){}
+}

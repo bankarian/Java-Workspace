@@ -1,0 +1,54 @@
+package fractal_MOUNT;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+public class Mount extends JPanel{
+	public int WIDTH = 1000, HEIGHT = 800;
+	
+	public static void main(String[] args){
+		new Mount().showUI();
+	}
+	public void showUI(){
+		JFrame Plate = new JFrame();
+		Plate.setTitle("Mountain_Drawer");
+		Plate.setSize(WIDTH, HEIGHT);
+		Plate.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		Plate.setLocationRelativeTo(null);
+		
+		JPanel northP = new JPanel();
+		northP.setSize(WIDTH,100);
+		northP.setBackground(Color.CYAN);
+		this.setSize(WIDTH,700);
+//		this.setBackground(Color.darkGray);
+		this.setBackground(Color.white);
+		Plate.add(northP,BorderLayout.NORTH);
+		Plate.add(this,BorderLayout.CENTER);
+		
+		MountListener MListener = new MountListener();
+		String[] order = {
+				"Mountain","3DMountain"
+		};
+		for(int i=0;i<order.length;++i){
+			JButton button = new JButton(order[i]);
+			button.setActionCommand(order[i]);
+			button.setPreferredSize(new Dimension(150,50));
+			button.addActionListener(MListener);
+			
+			northP.add(button);
+		}
+		this.addMouseListener(MListener);
+		
+		Plate.setVisible(true);
+		MListener.g = this.getGraphics();
+	}
+	public void paint(Graphics g){
+		super.paint(g);
+		//Ô¤ÏÈÉèÖÃ±³¾°
+	}
+}

@@ -1,0 +1,58 @@
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.JButton;
+
+//画笔监听器
+public class DrawerListener extends MouseAdapter implements ActionListener {
+    int x1,y1,x2,y2,x3,y3;
+    Graphics graph; //创建画布
+    String order = "Line"; //初始命令为绘制线条
+    //按钮的监听
+    public void actionPerformed(ActionEvent e){
+    	JButton button = (JButton)e.getSource();
+    	order = button.getText();
+    	//画笔颜色
+    	if(order.equals("Blue"))
+    		graph.setColor(Color.BLUE); 
+    	else if(order.equals("Black"))
+    		graph.setColor(Color.BLACK);
+    	else if(order.equals("Red"))
+    		graph.setColor(Color.RED);
+    }
+    //鼠标的监听
+	public void mousePressed(MouseEvent e){
+		System.out.println("Pressed");
+		x1 = e.getX();  //注意是得到事件源的坐标，鼠标点击为事件源
+		y1 = e.getY();
+    }
+    public void mouseReleased(MouseEvent e){
+    	System.out.println("Released");
+    	x2 = e.getX();
+    	y2 = e.getY();
+    	//松开时，画图
+    	//画笔颜色
+//    	if(order.equals("Blue"))
+//    		graph.setColor(Color.BLUE); 
+//    	else if(order.equals("Black"))
+//    		graph.setColor(Color.BLACK);
+//    	else if(order.equals("Red"))
+//    		graph.setColor(Color.RED);
+    	//画笔类型
+    	//"Line", "Oval", "RoundRec", "Rect","fillOval"
+    	if(order.equals("Line"))
+    		graph.drawLine(x1, y1, x2, y2);
+    	else if(order.equals("Oval"))
+    		graph.drawOval(x1, y1, 120, 100);
+    	else if(order.equals("RoundRect"))
+    		graph.drawRoundRect(x1, y1, 120, 100, 10, 10);
+    	else if(order.equals("Rect"))
+    		graph.drawRect(x1, y1, 120, 100);
+    	else if(order.equals("fillOval"))
+    		graph.fillOval(x1, y1, 20, 20);;
+    }
+}

@@ -1,0 +1,137 @@
+package ini_DRAWPLATE;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Polygon;
+import java.awt.image.BufferedImage;
+
+//绘制立方体
+public class Stereography {
+	protected int dx = 20, dy = 20, Len=40; //偏移 立方体高度
+	protected int count = 0;
+//	BufferedImage buffer = new BufferedImage(1000,740,BufferedImage.TYPE_INT_ARGB);
+//	protected Point pn[] = new Point[20];
+	//当前位置往下，往后
+	public void Draw0(Graphics g,int curX,int curY){
+//		Graphics tempG = buffer.getGraphics();
+		//逆时针标号
+		Point newPoint[] = getPoint(dx,dy,Len,curX,curY);
+		Point pFront[] = new Point[4];
+		for(int i=0;i<4;++i) pFront[i] = newPoint[i];
+		Point p1 = pFront[0]; Point p2 = pFront[1]; 
+		Point p3 = pFront[2]; Point p4 = pFront[3];
+		//behind
+		Point pBehind[] = new Point[3];
+		for(int i=0;i<3;++i) pBehind[i] = newPoint[i+4];
+		Point p5 = pBehind[0]; Point p6 = pBehind[1]; Point p7 = pBehind[2];
+		//connect front 
+		g.drawLine(p1.x, p1.y, p2.x, p2.y);
+		g.drawLine(p2.x, p2.y, p3.x, p3.y);
+		g.drawLine(p3.x, p3.y, p4.x, p4.y);
+		g.drawLine(p4.x, p4.y, p1.x, p1.y);
+		//connect front and behind
+		g.drawLine(p1.x, p1.y, p7.x, p7.y);
+		g.drawLine(p3.x, p3.y, p5.x, p5.y);
+		g.drawLine(p4.x, p4.y, p6.x, p6.y);
+		//connect behind
+		g.drawLine(p5.x, p5.y, p6.x, p6.y);
+		g.drawLine(p6.x, p6.y, p7.x, p7.y);
+		
+		//fill front 
+		Polygon ponFront = new Polygon();
+		for(int i=0;i<pFront.length;++i){
+			ponFront.addPoint(pFront[i].x, pFront[i].y);
+		}
+		g.setColor(new Color(0,200,100));
+		g.fillPolygon(ponFront);
+		//fill right
+		Polygon ponRight = new Polygon();
+		for(int i=0;i<2;++i)
+			ponRight.addPoint(pFront[i+2].x, pFront[i+2].y);
+		for(int i=1;i>=0;--i)
+			ponRight.addPoint(pBehind[i].x, pBehind[i].y);
+		g.setColor(new Color(0,120,50));
+		g.fillPolygon(ponRight);
+		//fill up
+		Polygon ponUp = new Polygon();
+		for(int i=0;i<4;i+=3){
+			ponUp.addPoint(pFront[i].x, pFront[i].y);
+		}
+		ponUp.addPoint(pBehind[1].x, pBehind[1].y);
+		ponUp.addPoint(pBehind[2].x, pBehind[2].y);
+		g.setColor(new Color(0,150,70));
+		g.fillPolygon(ponUp);
+	}
+	
+	//画水平
+	public void DrawH(Graphics g,int curX,int curY,int cnt){
+		if(cnt==0) return;
+		Draw0(g,curX,curY);
+		DrawH(g,curX+Len,curY,cnt-1);
+	}
+	public void DrawV(Graphics g,int curX,int curY,int cnt){
+		if(cnt==0) return;
+		Draw0(g,curX,curY);
+		DrawV(g,curX-dx,curY+dy,cnt-1); //往前画防止覆盖
+	}
+	public void DrawPillar(Graphics g,int curX,int curY,int cnt){
+		if(cnt==0) return;
+		Draw0(g,curX,curY);
+		DrawPillar(g,curX,curY-Len,cnt-1);
+	}
+	//由于会覆盖，后-->前   左-->右
+	public void DrawPlate(Graphics g,int curX,int curY,int cnt){
+		Point p[] = getPlate(dx, dy, Len, curX, curY, cnt);
+		DrawH(g,p[0].x,p[0].y,cnt); //从后往前画
+		DrawV(g,p[1].x,p[1].y,cnt-2);  	DrawV(g,p[2].x,p[2].y,cnt-2);
+		DrawH(g,p[3].x,p[3].y,cnt);
+	}
+	//当前位置画Middle类型的结构
+	public void DrawMiddle(Graphics g,int curX,int curY,int cnt){
+		Point p[] = getMiddle(dx, dy, Len, curX, curY, cnt);
+		DrawPillar(g, p[0].x,p[0].y, cnt-2); //左后
+		DrawPillar(g, p[1].x,p[1].y, cnt-2);  //左前
+		DrawPillar(g, p[2].x,p[2].y, cnt-2); //右后
+		DrawPillar(g, p[3].x,p[3].y, cnt-2); //右前
+	}
+	//当前位置从下往上画，后往前
+	public void DrawSponge(Graphics g,int curX,int curY,int CNT){
+		DrawPlate(g,curX,curY,CNT);
+		DrawMiddle(g,curX,curY-Len,CNT);
+		DrawPlate(g,curX,curY-(CNT-1)*Len,CNT);
+	}
+	//当前位置获得一个正方体的6个点坐标 用于绘制
+	public Point[] getPoint(int dx,int dy,int Len,int curX,int curY){
+		//逆时针标号
+		Point p1 = new Point(curX, curY);
+		Point p2 = new Point(curX, curY+Len);
+		Point p3 = new Point(curX+Len, curY+Len);
+		Point p4 = new Point(curX+Len, curY);
+//		Point pFront[] = {p1,p2,p3,p4};
+		//behind
+		Point p5 = new Point(p3.x+dx, p3.y-dy);
+		Point p6 = new Point(p4.x+dx, p4.y-dy);
+		Point p7 = new Point(p1.x+dx, p1.y-dy);
+//		Point pBehind[] = {p5,p6,p7};
+		Point newP[] = {p1,p2,p3,p4,p5,p6,p7};
+		return newP;
+	}
+	//当前点位置得到Plate类型结构
+	public Point[] getPlate(int dx,int dy,int Len,int curX,int curY,int cnt){
+			Point p1 = new Point(curX,curY);
+			Point p2 = new Point(curX-dx,curY+dy);
+			Point p3 = new Point(curX+(cnt-1)*Len-dx,curY+dy);
+			Point p4 = new Point(curX-(cnt-1)*dx,curY+(cnt-1)*dy);
+			Point plate[] = {p1,p2,p3,p4};
+			return plate;
+	}
+	//当前位置得到Middle类型的结构
+	public Point[] getMiddle(int dx,int dy,int Len,int curX,int curY,int cnt){
+		Point p1 = new Point(curX,curY);
+		Point p2 = new Point(curX-(cnt-1)*dx, curY+(cnt-1)*dy);
+		Point p3 = new Point(curX+(cnt-1)*Len, curY);
+		Point p4 = new Point(curX+(cnt-1)*Len-(cnt-1)*dx, curY+(cnt-1)*dy);
+		Point middle[] = {p1,p2,p3,p4};
+		return middle;
+	}
+}

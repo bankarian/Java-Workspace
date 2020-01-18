@@ -1,0 +1,45 @@
+package graphics_2D;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+public class TEST extends JPanel{
+	public void showUI(){
+		JFrame Plate = new JFrame("TEST LAB");
+		Plate.setSize(new Dimension(1000,800));
+		Plate.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		Plate.setLocationRelativeTo(null);
+		
+		this.setSize(new Dimension(1000,700));
+		this.setBackground(Color.WHITE);
+		JPanel northP = new JPanel();
+		northP.setSize(new Dimension(1000,100));
+		northP.setBackground(Color.CYAN);
+		Plate.add(northP,BorderLayout.NORTH);
+		Plate.add(this,BorderLayout.CENTER);
+		
+		LISTENER listener = new LISTENER();
+		String[] str = {
+				"Line"
+		};
+		for(int i=0;i<str.length;++i){
+			JButton button = new JButton(str[i]);
+			button.setActionCommand(str[i]);
+			button.setPreferredSize(new Dimension(100,50));
+			button.addActionListener(listener);
+			northP.add(button);
+		}
+		Plate.setVisible(true);
+		listener.g2d = (Graphics2D) this.getGraphics();
+		this.addMouseListener(listener);
+	}
+	public static void main(String[] args){
+		new TEST().showUI();
+	}
+}

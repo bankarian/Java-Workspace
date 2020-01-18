@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="webcam/" kind="src" path="src"/>
+	<classpathentry kind="src" path="res"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Contact/opencv/x64"/>
+		</attributes>
+		<accessrules>
+			<accessrule kind="accessible" pattern="sun/**"/>
+		</accessrules>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Bankarian/Desktop/JAVA/webcam/bridj-0.7.0.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Contact"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Bankarian/Desktop/JAVA/webcam/slf4j-api-1.7.26.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Bankarian/Desktop/JAVA/webcam/slf4j-nop-1.7.26.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Bankarian/Desktop/JAVA/webcam/webcam-capture-0.3.12.jar"/>
+	<classpathentry kind="lib" path="opencv/opencv-400.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Contact/opencv/x64"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Bankarian/Desktop/JAVA/java-64位/custom_external_lib/jna-4.5.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Bankarian/Desktop/JAVA/java-64位/custom_external_lib/jna-platform-4.5.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Bankarian/Desktop/JAVA/java-64位/custom_external_lib/fastjson-1.2.47.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Bankarian/Desktop/JAVA/java-64位/my_proj_jar/baidu_trans.jar"/>
+	<classpathentry kind="lib" path="D:/Program Files/JAVA_workshop/External_jar/SwingSets3(BeautyEyeLNFDemo).jar"/>
+	<classpathentry kind="lib" path="D:/Program Files/JAVA_workshop/Contact/tello视频/javacv/ffmpeg.jar"/>
+	<classpathentry kind="lib" path="D:/Program Files/JAVA_workshop/Contact/tello视频/javacv/ffmpeg-windows-x86_64.jar"/>
+	<classpathentry kind="lib" path="D:/Program Files/JAVA_workshop/Contact/tello视频/javacv/javacpp.jar"/>
+	<classpathentry kind="lib" path="D:/Program Files/JAVA_workshop/Contact/tello视频/javacv/javacv.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

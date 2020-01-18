@@ -1,0 +1,25 @@
+package FRACTAL_MOUNT;
+import java.awt.Color;
+import java.awt.Graphics;
+
+//星星绘制
+public class SkyDrawer {
+	//Math.random()随机产生0.0--1.0的小数
+	public void DrawStar(Graphics g){
+		for(int i=0;i<70;++i){
+			int posX = (int)(1000*Math.random());
+			int posY = (int)(800*Math.random());
+			if(i<40) g.setColor(Color.YELLOW);
+			else g.setColor(Color.WHITE);
+			g.drawString("*", posX, posY);
+		}	
+	}
+	public void DrawMoon(Graphics g){
+		int posX = (int)(800*Math.random());
+		int posY = (int)(100*Math.random()) + 40;//月亮至少再距顶端40的位置
+		g.setColor(Color.WHITE);
+		g.fillOval(posX, posY, 80, 80);
+		g.setColor(Color.darkGray);//用背景颜色覆盖,形成月亮
+		g.fillOval(posX-(10+(int)(4*Math.random())), posY-(10+(int)(4*Math.random())), 80, 80);
+	}
+}

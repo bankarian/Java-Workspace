@@ -1,0 +1,48 @@
+package ini_DRAWPLATE;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
+
+import javax.swing.JPanel;
+
+//¥Ê¥¢
+public class Shape {
+	String type;
+	Color color;
+	int x1, y1, x2, y2, width,height;
+	Image image;
+	public Shape(String	type,Color color,int x1,int y1,int x2,int y2){
+		this.x1 = x1;	this.x2 = x2;
+		this.y1 = y1;	this.y2 = y2;
+		this.color = color;
+		this.type = type;
+	}
+	public Shape(String type,Color color,int x1,int y1,int x2,int y2,int width,int height){
+		this.x1 = x1;	this.x2 = x2;
+		this.y1 = y1;	this.y2 = y2;
+		this.color = color;
+		this.type = type;
+		this.width = width;	this.height = height;
+	}
+	//¥ÊÕºœÒ¿‡–Õ
+	public Shape(String type,int x1,int y1,Image image){
+//		System.out.println("Storing Image");
+		this.type = type;
+		this.x1 =x1;	this.y1 = y1;
+		this.image = image;
+	}
+	public void DrawShape(Graphics g){
+		if(type.equals("Line")){
+//			System.out.println("DrawLine here");
+			g.setColor(color);
+			g.drawLine(x1, y1, x2, y2);
+		}
+		else if(type.equals("Oval")){
+			g.setColor(color);
+			g.drawOval(x1, y1, width, height);
+		}
+		else if(type.equals("Image")){ 
+			g.drawImage(image, x1,y1, null);
+		}
+	}
+}

@@ -1,0 +1,31 @@
+package FRACTAL;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+//¿µÍÐ¶û¼¯
+public class Cantor {
+	BufferedImage buffer = new BufferedImage(1000,740,BufferedImage.TYPE_INT_ARGB);
+	Graphics tempG = buffer.getGraphics();
+	Color color;
+	public	void draw(Graphics g,int sx,int ex,int curY,int cnt){
+		if(cnt==0){
+//			g.drawImage(buffer, 0, 0, null);
+			return;
+		}
+		g.drawLine(sx, curY, ex, curY);
+		g.drawLine(sx, curY+1, ex, curY+1);
+		
+		tempG.setColor(color);
+		tempG.drawLine(sx, curY, ex, curY);
+		tempG.drawLine(sx, curY+1, ex, curY+1);
+		
+		int len = (ex-sx)/3;
+		draw(g,sx,sx+len,curY+6,cnt-1);
+		draw(g,ex-len,ex,curY+6,cnt-1);
+	}
+	public Image returnImage(){
+		return buffer;
+	}
+}
+

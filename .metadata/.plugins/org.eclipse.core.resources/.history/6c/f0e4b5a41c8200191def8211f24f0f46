@@ -1,0 +1,146 @@
+package fractal_TREE;
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Line2D;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+//dynamic tree
+public class Main extends JFrame{
+	private static final long serialVersionUID = 1L;
+	
+	//set the dimension of the frame; 创建：Toolkit t = Toolkit.getDefaultToolkit();
+	private static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	//final 相当于const,定义的变量不能再改变.注意static final要在一开始构造的时候就赋值
+	public static final int WIDTH = (int)screenSize.getWidth(), HEIGHT = (int)screenSize.getHeight();
+	
+	//set the parameters for the Slider
+	public static final int SLIDER_INIT = 250,SLIDER_MAX = 2*SLIDER_INIT;
+	public JSlider angleSlider;
+	
+	//set the parameters for the Tree
+	private double rotAngle = Math.PI/2;
+	private boolean movingRight = true;
+	public static boolean animating = true;//static类型不属于任何一个类,可直接用类名.NAME来访问
+	
+	public Main(){//直接在构造函数中，进行界面的构建
+		//setting up JFrame
+//		super("Fractal Tree");//super:当前对象的父类.这里调用父类的一个构造函数,即new JFrame("Fractal Tree")
+		this.setVisible(true);
+		this.setSize(WIDTH, HEIGHT);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		//setting up the container  
+		Container cp = this.getContentPane();//获取内容窗格
+		cp.setLayout(new BorderLayout());
+		//cp is where we use to store the drawings
+		
+		//Create nested class of DrawCanvas
+		class DrawPanel extends JPanel
+		{
+			private static final long serialVersionUID = 1L;
+			
+			public static final double INITIAL_LENGTH = 190;
+			@Override	//伪码表示重写,方便系统检查是否重写正确
+			public void paintComponent(Graphics g){
+				super.paintComponent(g);//先调用父类
+				this.setBackground(new Color(45,45,45));
+				
+				//draw the tree
+				g.setColor(Color.YELLOW);
+				Graphics2D g2d = (Graphics2D) g;
+				drawBranch(g2d,cp.getWidth()/2.0,(double)cp.getHeight(),Math.PI/2,INITIAL_LENGTH,20);
+			}
+			public void drawBranch(Graphics2D g2d,double x,double y,double angle,double length,float stroke){
+				g2d.setStroke(new BasicStroke(stroke));//指定线条宽度
+				double nx = x+length*Math.cos(angle);
+				double ny = y-length*Math.sin(angle);
+				g2d.draw(new Line2D.Double(x, y, nx, ny));
+				//Stopping condition for the recursion
+				if(length > 4){//将0.8指明为float,java默认小数为double
+					drawBranch(g2d,nx,ny,angle-rotAngle*0.3,length*0.7,stroke*0.80f);//right
+					drawBranch(g2d,nx,ny,angle+rotAngle,length*0.8,stroke*0.70f);//left
+				}return;
+			}	
+		}
+		
+		//creating the panel
+		DrawPanel panel = new DrawPanel();
+		panel.setPreferredSize(new Dimension(cp.getWidth(),cp.getHeight()));
+		panel.setLayout(null);
+		cp.add(panel,BorderLayout.CENTER);
+		
+		//setting the JSlider
+		angleSlider = new JSlider(0,SLIDER_MAX,SLIDER_INIT);//最小值最大值,初始值
+		angleSlider.setPaintTicks(true);//设置刻度,绘制出来
+		angleSlider.setMajorTickSpacing(SLIDER_INIT/10);//主刻度间隔
+		angleSlider.setMinorTickSpacing(SLIDER_MAX/10);//次刻度间隔
+		angleSlider.setBounds(10,10,200,40);//top-left-pos width-height
+		panel.add(angleSlider);
+		angleSlider.setOpaque(false);
+		angleSlider.setVisible(true);
+		
+		//setting up listener for the slider
+		angleSlider.addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent e){//slider change the rotAngle for the recursion
+				rotAngle = angleSlider.getValue()*(Math.PI)/(SLIDER_MAX);
+				panel.repaint();//repaint panel
+			}
+		});
+		
+		//when the user clicks on the screen, the animation stops.
+		//using MouseAdapter(继承类,不用全部函数重写),implements MouseListener(继承接口)全部都要重写
+		this.addMouseListener(new MouseAdapter(){
+			@Override
+			public void mouseClicked(MouseEvent e){
+				animating = !animating;//每次鼠标点击JFrame窗体,动静切换
+			}
+		});
+		
+		//timer to keep the animation going
+		ActionListener updateTask = new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				if(animating)
+				{
+					if(movingRight){//auto change the slider's value
+						angleSlider.setValue(angleSlider.getValue()+1);
+					}
+					else angleSlider.setValue(angleSlider.getValue()-1);
+				}
+				if(angleSlider.getValue() == SLIDER_MAX
+					|| angleSlider.getValue() == 0)
+				{
+					movingRight = !movingRight;
+				}
+			}
+		};
+		//every 10 ms triggers the action
+		new Timer(10,updateTask).start();//延时参数,启动的动作监听
+	}
+	public static void main(String[] args){
+		SwingUtilities.invokeLater(new Runnable(){
+			@Override
+			public void run(){
+				new tree_Main();
+			}
+		});
+	}
+}

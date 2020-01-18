@@ -1,0 +1,215 @@
+package chess_game;
+
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Toolkit;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Line2D;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+public class Chess_game extends JFrame{
+	private static final long serialVersionUID = 1L;
+	public static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	public static final int screenWIDTH = (int)screenSize.getWidth(), screenHEIGHT = (int)screenSize.getHeight();
+	
+	public static final int grid_size = 50, board_size = 19, chess_size = 40, chess_R = 20;
+	public static final int board_sx = 150, board_sy = 24;
+	public int[][] Board_chess = new int[board_size][board_size];	//0--no chess, 1--white, 2--black
+	public static final int none = 0, white = 1, black = 2;
+	private boolean is_white = true;
+	
+	public static final float LineStroke = (float) 1.444;
+	public final String backGroundAddress = "C:\\Users\\Bankarian\\Desktop\\pic_store\\back_pic2.jpg";
+	public static final Dimension buttonSize = new Dimension(100,40);
+	
+	public void InitialBoard(){
+		for(int i=0;i<board_size;++i)
+			for(int j=0;j<board_size;++j)
+				Board_chess[i][j] = 0;
+		is_white = true;
+	}
+	
+	public Chess_game()
+	{
+		this.setSize(screenSize);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		Container cp = this.getContentPane();
+		cp.setLayout(new BorderLayout());
+		InitialBoard();
+		
+		/**
+		 * choicePanel to control the game
+		**/
+		class choicePanel extends JPanel{
+			private static final long serialVersionUID = 1L;
+			
+			choicePanel(){
+				this.setPreferredSize(new Dimension(200, screenHEIGHT));
+				this.setBackground(Color.DARK_GRAY);
+				String[] choice = { "Start", "Exit"};
+				for(int i=0;i<choice.length;++i){
+					JButton button = new JButton(choice[i]);
+					button.setPreferredSize(buttonSize);
+					button.setActionCommand(choice[i]);
+					this.add(button);
+				}
+			}
+			
+		}
+		choicePanel choiceP = new choicePanel();
+		choiceP.setVisible(true);
+		cp.add(choiceP, BorderLayout.EAST);
+		
+		/**chessPanel is for repainting the Board && Chess
+		 *loops row paint Columns. loops columns paint Rows.
+		 *loops row,columns, check if a chess occurs.
+		**/
+		class chessPanel extends JPanel{
+			private static final long serialVersionUID = 1L;
+			ImageIcon BackGround = new ImageIcon(backGroundAddress);
+			@Override
+			public void paintComponent(Graphics g){
+				super.paintComponent(g);
+				int Row_st = board_sy, Row_en = board_sy + (board_size-1)*grid_size;
+				int Col_st = board_sx, Col_en = board_sx + (board_size-1)*grid_size;
+				
+				g.drawImage(BackGround.getImage(), 0, 0, this.getWidth(), this.getHeight(), null);
+				Graphics2D g2d = (Graphics2D)g;
+				g2d.setColor(Color.BLACK);
+				g2d.setStroke(new BasicStroke(LineStroke, BasicStroke.CAP_ROUND, BasicStroke.CAP_ROUND));  	//ÉèÖÃÏß¿í
+				for(int i=0;i<board_size;++i){
+					g2d.draw(new Line2D.Double((double)Col_st, (double)board_sy + i*grid_size, (double)Col_en, (double)board_sy + i*grid_size));
+					g2d.draw(new Line2D.Double((double)board_sx + i*grid_size, (double)Row_st, (double)board_sx + i*grid_size, (double)Row_en));
+				}
+				
+				for(int i=0;i<board_size;++i){
+					for(int j=0;j<board_size;++j){
+						if(Board_chess[i][j]>0){
+							int cur_x = board_sx+i*grid_size - chess_R;
+							int cur_y = board_sy+j*grid_size - chess_R;
+							if(Board_chess[i][j] == white) g.setColor(Color.WHITE);
+							else g.setColor(Color.BLACK);
+							g.fillOval(cur_x, cur_y, chess_size, chess_size);
+						}
+					}
+				}
+			}
+			chessPanel(){
+				this.setLayout(null);
+				this.setPreferredSize(new Dimension(screenWIDTH - 200, screenHEIGHT));
+				
+			}
+		}
+		chessPanel mainPanel = new chessPanel();
+		mainPanel.setVisible(true);
+		
+		/**
+		 * Once clik on the board get the real_chessX, real_chessY
+		 * using tmpX && tmpY to judge the Exact Point the chess should occur
+		 * the dx > grid/2, really exist on dx+1
+		 * the dy > grid/2, really exist on dy+1
+		 * then draw the chess on the exact point
+		 * then Judge if a winner occurs
+		 * @param real_chessX the opaque mouse kick X we get
+		 * @param real_chessY the opaque mouse kick Y we get
+		 * @param tmpX the maximum integral grid width the real_chessX pass
+		 * @param tmpY the maximum integral grid height the real_chessY pass
+		 * @param Result the number of chess one can reach
+		**/
+		mainPanel.addMouseListener(new MouseAdapter(){
+			Graphics main_g;	int curX=0, curY=0;
+			@Override
+			public void mouseClicked(MouseEvent e){
+				main_g = mainPanel.getGraphics();
+				double real_chessX= (double)e.getX()-(double)board_sx;
+				double real_chessY = (double)e.getY()-(double)board_sy;
+				
+				int tmpX = (int)(real_chessX/grid_size), tmpY = (int)(real_chessY/grid_size);
+				double dx = real_chessX - (double)tmpX*grid_size;
+				double dy = real_chessY - (double)tmpY*grid_size;
+				if(dx > grid_size/2) tmpX += 1;
+				if(dy > grid_size/2) tmpY += 1;
+//				System.out.println("tmpX="+tmpX+" tmpY="+tmpY);
+				
+				curX = board_sx+tmpX*grid_size-chess_R;
+				curY = board_sy+tmpY*grid_size-chess_R;
+				if(is_white){
+					main_g.setColor(Color.WHITE);
+					
+					main_g.fillOval(curX, curY, chess_size, chess_size);
+					Board_chess[tmpX][tmpY] = white;
+					is_white = false;
+				}
+				else{
+					main_g.setColor(Color.BLACK);
+					
+					main_g.fillOval(curX, curY, chess_size, chess_size);
+					Board_chess[tmpX][tmpY] = black;
+					is_white = true;
+				}
+				
+				int Result = JudgeResult();
+				if(Result != none){
+					if(Result == black) System.out.println("black win!");
+					else System.out.println("white win!");
+				}
+			}
+		});
+		
+		cp.add(mainPanel,BorderLayout.WEST);
+		this.setVisible(true);		
+	}
+	
+	/**
+	 * for each chess, if it can reach another 4 same chess --> the chess win.
+	 * note that each case the chess just move towards 1 direction.
+	 * @return if can win, the recursion will return total value of 4
+	 * 		   otherwise, the returned value < 4
+	**/
+	public int[][] DIR = {{1,0}, {-1,0}, {0,1}, {0,-1}, {1,1}, {1,-1}, {-1,1}, {-1,-1}};
+	public int Dfs(int chessType, int step, int curX, int curY, int dir){
+		int nX = curX + DIR[dir][0], nY = curY + DIR[dir][1];
+		if((nX>=0&&nX<board_size) && (nY>=0&&nY<board_size)){
+			if(Board_chess[nX][nY] == chessType){
+				if(step == 4) return (int)1;
+				return (int)(1 + Dfs(chessType, step+1, nX, nY, dir));
+			}
+			else return (int)0;
+		}
+		else return (int)0;
+		
+	}
+	//cnt == 4--> a chess can reach the other 4 chess, Win!
+	public int JudgeResult(){
+		int cnt = 0;
+		int i=0, j=0;
+		for(i=0;i<board_size;++i){
+			for(j=0;j<board_size;++j){
+				if(Board_chess[i][j]>0){
+					for(int d=0;d<8;++d){
+						cnt = Dfs(Board_chess[i][j], 0, i, j, d);
+						if(cnt == 4) break;
+					}
+					if(cnt == 4) break;
+				}
+				else continue;
+			}if(cnt == 4) break;
+		}
+		if(cnt == 4) return Board_chess[i][j];
+		else return none;
+	}
+	public static void main(String[] args){
+		new Chess_game();
+	}
+}

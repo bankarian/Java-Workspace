@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;Plane.CommandReceiver&apos; to &apos;VideoReceiver&apos;&#x0D;&#x0A;- Original project: &apos;Contact&apos;&#x0D;&#x0A;- Original element: &apos;Plane.CommandReceiver&apos;&#x0D;&#x0A;- Renamed element: &apos;Plane.VideoReceiver&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;CommandReceiver&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src&lt;Plane{CommandReceiver.java[CommandReceiver" matchStrategy="1" name="VideoReceiver" qualified="false" references="true" similarDeclarations="false" stamp="1566637918574" textual="false" version="1.0"/>
+</session>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move element &apos;DrawSponge.java&apos; to &apos;DrawUI2.0/src/mg_SPONGE&apos;&#x0D;&#x0A;- Original project: &apos;MGsponge&apos;&#x0D;&#x0A;- Destination element: &apos;DrawUI2.0/src/mg_SPONGE&apos;&#x0D;&#x0A;- Original element: &apos;DrawSponge.java&apos;&#x0D;&#x0A;- Update references to refactored element" description="Move compilation unit" destination="=DrawUI2.0/src&lt;mg_SPONGE" element1="/src&lt;{DrawSponge.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.move" policy="org.eclipse.jdt.ui.moveResources" qualified="false" references="true" stamp="1559104135165" units="1" version="1.0"/>
+</session>

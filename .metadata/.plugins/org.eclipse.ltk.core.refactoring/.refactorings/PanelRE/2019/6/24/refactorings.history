@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move 3 elements to &apos;DrawUI2.0/src/JPanel_repaint_pra&apos;&#x0D;&#x0A;- Original project: &apos;PanelRE&apos;&#x0D;&#x0A;- Destination element: &apos;DrawUI2.0/src/JPanel_repaint_pra&apos;&#x0D;&#x0A;- Original elements:&#x0D;&#x0A;     eListener.java&#x0D;&#x0A;     eShape.java&#x0D;&#x0A;     ePanel.java&#x0D;&#x0A;- Update references to refactored element" description="Move compilation units" destination="=DrawUI2.0/src&lt;JPanel_repaint_pra" element1="/src&lt;{eListener.java" element2="/src&lt;{eShape.java" element3="/src&lt;{ePanel.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.move" policy="org.eclipse.jdt.ui.moveResources" qualified="false" references="true" stamp="1560065768480" units="3" version="1.0"/>
+</session>

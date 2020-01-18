@@ -1,0 +1,11 @@
+package TEST;
+import java.util.HashMap;
+
+public class Test {
+
+	public static void main(String[] args){
+		HashMap<String,Integer> people = new HashMap<String,Integer>();
+		people.put("john", 32);
+		System.out.println(people.get("hh"));
+	}
+}
